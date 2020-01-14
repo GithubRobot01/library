@@ -32,40 +32,39 @@
                     </div>
                     <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                         <!--<el-table-column type="index" align="center" label="序号"></el-table-column>-->
-                        <el-table-column prop="isbn" label="书号" align="center" fixed></el-table-column>
+                        <el-table-column prop="isbn" label="书号" width="150" align="center" fixed></el-table-column>
 
                         <!--<el-table-column prop="name" label="书名" align="center"></el-table-column>-->
                         <el-table-column
                                 label="书名"
+                                width="180"
                                 align="center">
                             <template slot-scope="scope">
                                 <el-popover trigger="hover" placement="top">
-                                    <p>书名: {{ scope.row.name }}</p>
-                                    <p style="width: 500px">介绍: {{ scope.row.introduction }}</p>
+                                    <p style="font-weight: bold">书名:《{{ scope.row.name }}》</p>
+                                    <p style="font-weight: bold;width: 500px;color: black">{{ scope.row.introduction }}</p>
                                     <div slot="reference" class="name-wrapper">
                                         <el-tag size="medium">{{ scope.row.name }}</el-tag>
                                     </div>
                                 </el-popover>
                             </template>
                         </el-table-column>
-
-
-                        <el-table-column prop="author" label="作者" align="center"></el-table-column>
-                        <el-table-column prop="publish" label="出版社" align="center"></el-table-column>
-                        <el-table-column prop="class_name" label="分类" align="center"></el-table-column>
-                        <el-table-column prop="language" label="语言" align="center"></el-table-column>
-                        <el-table-column label="状态" align="center">
+                        <el-table-column prop="author" label="作者" width="150" align="center"></el-table-column>
+                        <el-table-column prop="publish" label="出版社" width="200" align="center"></el-table-column>
+                        <el-table-column prop="class_name" label="分类" width="100" align="center"></el-table-column>
+                        <el-table-column prop="language" label="语言" width="100" align="center"></el-table-column>
+                        <el-table-column label="状态" width="100" align="center">
                             <template slot-scope="scope">
                                 <span>{{ scope.row.state == '0' ? '已下架' : '上架中'}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="书架号" align="center" width="100">
+                        <el-table-column label="书架号" width="80" align="center">
                             <template slot-scope="scope">
                                 <span>{{ scope.row.state == '0' ? '无' : scope.row.pressmark}}</span>
                             </template>
                         </el-table-column>
                         <!--<el-table-column prop="pressmark" label="书架号" align="center"></el-table-column>-->
-                        <el-table-column prop="number" label="剩余数量" align="center" width="100"></el-table-column>
+                        <el-table-column prop="number" label="剩余数量"  width="100" align="center"></el-table-column>
                         <el-table-column label="操作" align="center" fixed="right">
                             <template slot-scope="scope">
                                 <el-button type="text" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
@@ -73,6 +72,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
+
                     <div class="pagination-container">
                         <el-pagination
                             class="pagiantion"

@@ -6,7 +6,7 @@
     <select id="selectByCondition" parameterType="String" resultType="book">
         SELECT * from book_info,class_info WHERE book_info.class_id=class_info.class_id
         <if test="value != null and value.length > 0">
-            and ISBN like '%${value}%' or name like '%${value}%'
+            and (ISBN like '%${value}%' or name like '%${value}%')
         </if>
     </select>
 
