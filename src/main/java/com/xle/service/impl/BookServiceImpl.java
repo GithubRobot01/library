@@ -28,4 +28,9 @@ public class BookServiceImpl implements BookService {
         Page<Book> page = bookMapper.selectByCondition(queryString);
         return new PageResult(page.getTotal(),page.getResult());
     }
+
+    @Override
+    public void addBook(Book book) {
+        bookMapper.addBook(book);
+    }
 }

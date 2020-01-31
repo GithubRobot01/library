@@ -28,17 +28,17 @@
                     <div class="filter-container">
                         <el-input placeholder="书籍编号/书籍名称" v-model="pagination.queryString" style="width: 200px;" class="filter-item"></el-input>
                         <el-button @click="findPage1()" class="dalfBut">查询</el-button>
-                        <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
+                        <el-button type="primary" class="butT" @click="handleCreate()">新增</el-button>
                     </div>
-                    <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
-                        <!--<el-table-column type="index" align="center" label="序号"></el-table-column>-->
+                    <!--
+                    stripe 斑马线
+                    highlight-current-row 当前行高亮显示
+                    max-height属性为 Table 指定最大高度。此时若表格所需的高度大于最大高度，则会显示一个滚动条。
+                    -->
+                    <el-table size="small" current-row-key="id" :data="dataList"  max-height="355" stripe highlight-current-row>
                         <el-table-column prop="isbn" label="书号" width="150" align="center" fixed></el-table-column>
 
-                        <!--<el-table-column prop="name" label="书名" align="center"></el-table-column>-->
-                        <el-table-column
-                                label="书名"
-                                width="180"
-                                align="center">
+                        <el-table-column label="书名" width="180" align="center">
                             <template slot-scope="scope">
                                 <el-popover trigger="hover" placement="top">
                                     <p style="font-weight: bold">书名:《{{ scope.row.name }}》</p>
@@ -52,7 +52,7 @@
                         <el-table-column prop="author" label="作者" width="150" align="center"></el-table-column>
                         <el-table-column prop="publish" label="出版社" width="200" align="center"></el-table-column>
                         <el-table-column prop="class_name" label="分类" width="100" align="center"></el-table-column>
-                        <el-table-column prop="language" label="语言" width="100" align="center"></el-table-column>
+                        <el-table-column prop="language_name" label="语言" width="100" align="center"></el-table-column>
                         <el-table-column label="状态" width="100" align="center">
                             <template slot-scope="scope">
                                 <span>{{ scope.row.state == '0' ? '已下架' : '上架中'}}</span>
@@ -60,7 +60,7 @@
                         </el-table-column>
                         <el-table-column label="书架号" width="80" align="center">
                             <template slot-scope="scope">
-                                <span>{{ scope.row.state == '0' ? '无' : scope.row.pressmark}}</span>
+                                <span>{{ (scope.row.state == '0'||scope.row.pressmark==null) ? '无' : scope.row.pressmark}}</span>
                             </template>
                         </el-table-column>
                         <!--<el-table-column prop="pressmark" label="书架号" align="center"></el-table-column>-->
@@ -85,62 +85,85 @@
                     </div>
                     <!-- 新增标签弹层 -->
                     <div class="add-form">
-                        <el-dialog title="新增检查项" :visible.sync="dialogFormVisible">
+                        <el-dialog title="新增书籍" :visible.sync="dialogFormVisible">
                             <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right" label-width="100px">
                                 <el-row>
                                     <el-col :span="12">
-                                        <el-form-item label="项目编码" prop="code">
-                                            <el-input v-model="formData.code"/>
+                                        <el-form-item label="书籍编号" prop="isbn">
+                                            <el-input v-model="formData.isbn"/>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-form-item label="项目名称" prop="name">
+                                        <el-form-item label="书名" prop="name">
                                             <el-input v-model="formData.name"/>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row>
                                     <el-col :span="12">
-                                        <el-form-item label="性别">
-                                            <el-select v-model="formData.sex">
-                                                <el-option label="不限" value="0"></el-option>
-                                                <el-option label="男" value="1"></el-option>
-                                                <el-option label="女" value="2"></el-option>
-                                            </el-select>
+                                        <el-form-item label="作者" prop="author">
+                                            <el-input v-model="formData.author"/>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-form-item label="适用年龄">
-                                            <el-input v-model="formData.age"/>
+                                        <el-form-item label="出版社" prop="publish">
+                                            <el-input v-model="formData.publish"/>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row>
+                                    <el-col :span="12">
+                                        <el-form-item label="语言">
+                                            <!--点击下拉框时查询语言信息
+                                            filterable 下拉框可搜索
+                                            -->
+                                            <el-select v-model="formData.language_name" filterable placeholder="请选择语言" v-on:focus="selectLan">
+                                                <el-option
+                                                        v-for="item in languages"
+                                                        :key="item.id"
+                                                        :label="item.name"
+                                                        :value="item.id">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-col>
                                     <el-col :span="12">
                                         <el-form-item label="类型">
-                                            <el-select v-model="formData.type">
-                                                <el-option label="检查" value="1"></el-option>
-                                                <el-option label="检验" value="2"></el-option>
+                                            <el-select v-model="formData.class_name" filterable placeholder="请选择书籍类型" v-on:focus="selectCla">
+                                                <el-option
+                                                        v-for="item in classes"
+                                                        :key="item.id"
+                                                        :label="item.name"
+                                                        :value="item.id">
+                                                </el-option>
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
-                                    <el-col :span="12">
-                                        <el-form-item label="价格">
-                                            <el-input v-model="formData.price"/>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="24">
+                                        <el-form-item label="书籍介绍">
+                                            <el-input v-model="formData.introduction" type="textarea"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row>
-                                    <el-col :span="24">
-                                        <el-form-item label="项目说明">
-                                            <el-input v-model="formData.remark" type="textarea"></el-input>
+                                    <el-col :span="8">
+                                        <el-form-item label="上架状态">
+                                            <el-select v-model="formData.state" @change="inputToDisabled(formData.state)">
+                                                <el-option label="暂不上架" value="0"></el-option>
+                                                <el-option label="上架" value="1"></el-option>
+                                            </el-select>
                                         </el-form-item>
                                     </el-col>
-                                </el-row>
-                                <el-row>
-                                    <el-col :span="24">
-                                        <el-form-item label="注意事项">
-                                            <el-input v-model="formData.attention" type="textarea"></el-input>
+                                    <el-col :span="8">
+                                        <el-form-item label="书架号" >
+                                            <el-input v-model="formData.pressmark" placeholder="输入书架号" v-bind:disabled="disabledInput"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="8">
+                                        <el-form-item label="书籍数量">
+                                            <el-input v-model="formData.number"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
@@ -244,9 +267,13 @@
                 dialogFormVisible: false,//增加表单是否可见
                 dialogFormVisible4Edit:false,//编辑表单是否可见
                 rules: {//校验规则
-                    code: [{ required: true, message: '项目编码为必填项', trigger: 'blur' }],
-                    name: [{ required: true, message: '项目名称为必填项', trigger: 'blur' }]
-                }
+                    isbn: [{ required: true, message: '书籍编号为必填项', trigger: 'blur' }],
+                    name: [{ required: true, message: '书名为必填项', trigger: 'blur' }]
+                },
+                languages:[],
+                classes:[],
+                //控制书架号输入框状态
+                disabledInput:false
             },
             //钩子函数，VUE对象初始化完成后自动执行
             created() {
@@ -254,6 +281,37 @@
                 this.findPage();
             },
             methods: {
+                inputToDisabled(region){
+                    //如果选择的是1那么禁用输入框,否则该输入框是可以输入的
+                    console.log("region:"+region);
+                    if (region==="0"){
+                        this.disabledInput=true;
+                    }else {
+                        this.disabledInput=false;
+                    }
+                },
+                //查询所有书籍语言
+                selectLan(){
+                    axios.post("/language/findAll").then((res)=>{
+                        //解析Controller响应回的数据,为模型数据赋值
+                        if (res.data.flag){
+                            this.languages=res.data.data;
+                        } else{
+                            this.$message.error(res.data.message);
+                        }
+                    })
+                },
+                //查询所有书籍类型
+                selectCla(){
+                    axios.post("/class/findAll").then((res)=>{
+                        //解析Controller响应回的数据,为模型数据赋值
+                        if (res.data.flag){
+                            this.classes=res.data.data;
+                        } else{
+                            this.$message.error(res.data.message);
+                        }
+                    })
+                },
                 //编辑之后点击确定按钮
                 handleEdit() {
                     this.$refs['dataEditForm'].validate((vaild)=>{
@@ -284,7 +342,7 @@
                     this.$refs['dataAddForm'].validate((vaild)=>{
                         if (vaild){//校验成功
                             //表单校验成功,发送ajax请求将表单数据提交到后台
-                            axios.post("/checkitem/add.do",this.formData).then((res)=>{
+                            axios.post("/book/add",this.formData).then((res)=>{
                                 //关闭新增窗口
                                 this.dialogFormVisible=false;
                                 if (res.data.flag){
@@ -306,7 +364,7 @@
                 findPage1(){
                     //解决条件查询数据少时在第二页查询不出数据
                     this.pagination.currentPage=1;
-                    this.findPage()
+                    this.findPage();
                 },
                 //分页查询
                 findPage() {
@@ -330,7 +388,6 @@
                 handleCreate() {
                     this.dialogFormVisible=true;
                     this.resetForm();
-
                 },
                 // 弹出编辑窗口
                 handleUpdate(row) {

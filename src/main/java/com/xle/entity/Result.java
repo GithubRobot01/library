@@ -1,7 +1,5 @@
 package com.xle.entity;
 
-import lombok.Data;
-
 import java.io.Serializable;
 
 /**

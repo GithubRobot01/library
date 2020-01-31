@@ -5,4 +5,6 @@ import com.xle.pojo.Book;
 
 public interface BookMapper {
     Page<Book> selectByCondition(String queryString);
+
+    void addBook(Book book);
 }

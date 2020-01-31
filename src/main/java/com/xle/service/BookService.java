@@ -2,6 +2,7 @@ package com.xle.service;
 
 import com.xle.entity.PageResult;
 import com.xle.entity.QueryPageBean;
+import com.xle.pojo.Book;
 
 public interface BookService {
     /**
@@ -10,4 +11,7 @@ public interface BookService {
      * @return 页面信息
      */
     PageResult findPage(QueryPageBean queryPageBean);
+
+    //添加图书信息
+    void addBook(Book book);
 }
