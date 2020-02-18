@@ -16,4 +16,9 @@ public class LanguageServiceImpl implements LanguageService {
     public List<Language> findAll() {
         return languageMapper.findAll();
     }
+
+    @Override
+    public Language findLanguageByIsbn(String isbn) {
+        return languageMapper.findLanguageByIsbn(isbn);
+    }
 }

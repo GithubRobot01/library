@@ -16,7 +16,7 @@ public class Book implements Serializable {
     private String class_name;//类别
     private Integer pressmark;//书架号
     private String introduction; //介绍
-    private int state;//书籍状态(1上架,0下架)
+    private String state;//书籍状态(1上架,0下架)
     private int number;//剩余数量
 
 }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface LanguageService {
     List<Language> findAll();
+
+    Language findLanguageByIsbn(String isbn);
 }

@@ -14,4 +14,13 @@ public interface BookService {
 
     //添加图书信息
     void addBook(Book book);
+
+    //根据isbn查询图书信息
+    Book findByIsbn(String isbn);
+
+    //编辑(更新)图书信息
+    void updateBook(Book book);
+
+    //删除图书信息
+    void deleteBook(String isbn);
 }

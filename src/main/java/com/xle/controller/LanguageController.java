@@ -16,6 +16,7 @@ public class LanguageController {
     @Autowired
     LanguageService languageService;
 
+    //查询所有语言信息
     @RequestMapping("/findAll")
     public Result findAll(){
         List<Language> languages=languageService.findAll();
@@ -23,5 +24,15 @@ public class LanguageController {
             return new Result(false,MessageConstant.QUERY_LANGUAGE_FAIL);
         }
         return new Result(true, MessageConstant.QUERY_LANGUAGE_SUCCESS,languages);
+    }
+
+
+    @RequestMapping("/findLanguageByIsbn")
+    public Result findLanguageByIsbn(String isbn){
+        Language language=languageService.findLanguageByIsbn(isbn);
+        if (language==null){
+            return new Result(false,MessageConstant.UPDATE_BOOK_FAIL);
+        }
+        return new Result(true,MessageConstant.UPDATE_BOOK_SUCCESS,language);
     }
 }

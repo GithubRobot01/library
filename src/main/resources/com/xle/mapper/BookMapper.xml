@@ -15,4 +15,46 @@
         (#{isbn},#{name},#{author},#{publish},#{introduction},#{language_name},#{class_name},#{pressmark},#{state},#{number})
     </insert>
 
+    <select id="findByIsbn" parameterType="String" resultType="com.xle.pojo.Book">
+        SELECT * from book_info,class_info,language_info WHERE book_info.class_id=class_info.class_id and book_info.language_id=language_info.language_id and isbn=#{isbn}
+    </select>
+
+    <update id="updateBook" parameterType="com.xle.pojo.Book">
+        update book_info
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="author != null">
+                author = #{author},
+            </if>
+            <if test="publish != null">
+                publish = #{publish},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction},
+            </if>
+            <if test="language_name != null">
+                language_id = #{language_name},
+            </if>
+            <if test="class_name != null">
+                class_id = #{class_name},
+            </if>
+            <if test="pressmark != null">
+                pressmark = #{pressmark},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="number != null">
+                number = #{number},
+            </if>
+        </set>
+        where isbn = #{isbn}
+    </update>
+
+    <delete id="deleteBook" parameterType="String">
+        delete from book_info where isbn=#{isbn}
+    </delete>
+
 </mapper>

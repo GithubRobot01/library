@@ -33,4 +33,19 @@ public class BookServiceImpl implements BookService {
     public void addBook(Book book) {
         bookMapper.addBook(book);
     }
+
+    @Override
+    public Book findByIsbn(String isbn) {
+        return bookMapper.findByIsbn(isbn);
+    }
+
+    @Override
+    public void updateBook(Book book) {
+        bookMapper.updateBook(book);
+    }
+
+    @Override
+    public void deleteBook(String isbn) {
+        bookMapper.deleteBook(isbn);
+    }
 }
