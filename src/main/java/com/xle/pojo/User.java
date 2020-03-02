@@ -12,8 +12,13 @@ import java.util.Set;
  */
 @Data
 public class User implements Serializable{
-    private String name;
-    private String username;
-    private String password;
+    private String sid; //学号
+    private String name; //姓名
+    private String sex; //性别
+    private String major; //专业
+    private String clazz; //班级(避免与关键字class冲突)
+    private String username; //用户名
+    private String password; //密码
+    private String type; //用户类型(0表示管理员,1表示学生)
 
 }

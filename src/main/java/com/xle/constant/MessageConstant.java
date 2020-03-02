@@ -18,6 +18,14 @@ public class MessageConstant {
     public static final String UPDATE_BOOK_FAIL = "更新图书信息失败";
     public static final String DELETE_BOOK_SUCCESS = "删除图书信息成功";
     public static final String DELETE_BOOK_FAIL = "删除图书信息失败";
+    public static final String ADD_USER_SUCCESS = "添加用户信息成功";
+    public static final String ADD_USER_FAIL = "添加用户信息失败";
+    public static final String QUERY_USER_SUCCESS = "查询用户信息成功";
+    public static final String QUERY_USER_FAIL = "查询用户信息失败";
+    public static final String UPDATE_USER_SUCCESS = "更新用户信息成功";
+    public static final String UPDATE_USER_FAIL = "更新用户信息失败";
+    public static final String DELETE_USER_SUCCESS = "删除用户信息成功";
+    public static final String DELETE_USER_FAIL = "删除用户信息失败";
 
 
 }

@@ -42,9 +42,9 @@
                                 <span style="font-size: 18px">{{name}},欢迎您!</span>
                             </div>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item divided>
-                                <span style="display:block;">修改密码</span>
-                            </el-dropdown-item>
+                                <!--<el-dropdown-item divided>
+                                <span style="display:block;" @click="changePassword()">修改密码</span>
+                                </el-dropdown-item>-->
                                 <el-dropdown-item divided>
                                         <span style="display:block;">
                                             <a href="/login.html">退出</a>
@@ -54,6 +54,7 @@
                         </el-dropdown>
                     </div>
                 </nav>
+
             </el-header>
             <el-container>
                 <el-aside width="200px">
@@ -96,13 +97,13 @@
                     "children": [
                         {
                             "path": "/1-1",
-                            "title": "用户档案",
-                            "linkUrl":"member.html",
+                            "title": "用户信息",
+                            "linkUrl":"userlist.html",
                             "children":[]
                         },
                         {
                             "path": "/1-2",
-                            "title": "用户信息",
+                            "title": "修改密码",
                             "linkUrl":"all-item-list.html",
                             "children":[]
                         }
@@ -130,40 +131,28 @@
                             "title": "归还图书",
                             "linkUrl":"setmeal.html",
                             "children":[]
-                        },
-                        {
-                            "path": "/2-4",
-                            "title": "检查组管理",
-                            "linkUrl":"checkgroup.html",
-                            "children":[]
-                        },
-                        {
-                            "path": "/2-5",
-                            "title": "检查项管理",
-                            "linkUrl":"checkitem.html",
-                            "children":[]
                         }
                     ]
                 },
                 {
-                    "path": "5",     //菜单项所对应的路由路径
+                    "path": "3",     //菜单项所对应的路由路径
                     "title": "统计分析",     //菜单项名称
                     "icon":"fa-bar-chart",
                     "children":[//是否有子菜单，若没有，则为[]
                         {
-                            "path": "/5-1",
-                            "title": "会员数量统计",
+                            "path": "/3-1",
+                            "title": "图书分类数量统计",
                             "linkUrl":"report_member.html",
                             "children":[]
                         },
                         {
-                            "path": "/5-2",
+                            "path": "/3-2",
                             "title": "套餐预约占比统计",
                             "linkUrl":"report_setmeal.html",
                             "children":[]
                         },
                         {
-                            "path": "/5-3",
+                            "path": "/3-3",
                             "title": "数据统计报表",
                             "linkUrl":"report_business.html",
                             "children":[]
@@ -175,10 +164,10 @@
         created(){
             axios.get("/user/getName").then((res)=>{
                 if (res.data.flag){
-                    this.name=res.data.data;
+                    this.name=res.data.data.name;
                 }
             });
-        }
+        },
     });
     $(function() {
             var wd = 200;

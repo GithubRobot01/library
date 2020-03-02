@@ -9,8 +9,8 @@
     <meta name="keywords" content="图书库存管理">
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="plugins/elementui/index.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../css/login.css">
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
 <div id="app">
@@ -22,24 +22,20 @@
                         <em class="logo"></em>
                     </div>
                 </div>-->
-                <div style="text-align: center;font-size: 30px;color: #00B8EC">
+                <div style="text-align: center;font-size: 22px;color: #00B8EC">
                     图书库存管理系统
                 </div>
                 <div>
-                    <span style="padding-left: 140px;margin-top: 50px">用户名</span>
-                    <input type="text" style="margin-left: 10px;margin-top: 10px" name="username" placeholder="请输入用户名" />
+                        <span class="svg-container svg-container_login">
+                          <span class="user"></span>
+                        </span>
+                    <input type="text" style="margin-left: 150px" name="username" placeholder="请输入用户名" />
                 </div>
                 <div>
-                    <span style="padding-left: 154px;margin-top: 10px">密码</span>
-                    <input type="password" style="margin-left: 12px;margin-top: 10px" name="password" placeholder="请输入密码"/>
-                </div>
-                <div>
-                    <span style="padding-left: 124px;margin-top: 10px">用户类型</span>
-                    <select style="margin-left: 10px;margin-top: 10px;width: 70px;height: 25px" name="type">
-                        <option value="0">管理员</option>
-                        <option value="1">学生</option>
-                    </select>
-
+                        <span class="svg-container">
+                          <span class="username"></span>
+                        </span>
+                    <input type="password" style="margin-left: 150px" name="password" placeholder="请输入密码"/>
                 </div>
                 <input type="submit" style="width:80px;height:30px;margin-left: 290px" value="登录"/>
             </form>
