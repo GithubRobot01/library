@@ -10,6 +10,8 @@ import com.xle.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -49,5 +51,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String username) {
         userMapper.deleteUser(username);
+    }
+
+    @Override
+    public void changePassword(Map<String, String> map) {
+        userMapper.changePassword(map);
     }
 }

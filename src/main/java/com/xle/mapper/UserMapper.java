@@ -6,6 +6,8 @@ import com.xle.pojo.Book;
 import com.xle.pojo.User;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Map;
+
 public interface UserMapper {
 
     //用户登录
@@ -25,4 +27,7 @@ public interface UserMapper {
 
     //删除用户信息
     void deleteUser(String username);
+
+    //修改密码
+    void changePassword(Map<String, String> map);
 }

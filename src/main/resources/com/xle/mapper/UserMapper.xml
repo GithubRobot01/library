@@ -51,4 +51,8 @@
         delete from user where username=#{username}
     </delete>
 
+    <update id="changePassword" parameterType="HashMap">
+        update user set password=#{password} where username=#{username}
+    </update>
+
 </mapper>

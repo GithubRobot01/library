@@ -10,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -106,5 +110,19 @@ public class UserController {
         return new Result(true,MessageConstant.DELETE_USER_SUCCESS);
     }
 
-
+    //修改用户密码
+    @RequestMapping("/changePassword")
+    @ResponseBody
+    public Result changePassword(String password){
+        Map<String,String> map=new HashMap<>();
+        map.put("username",loginUser.getUsername());
+        map.put("password",password);
+        try {
+            userService.changePassword(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.CHANGE_PASSWORD_FAIL);
+        }
+        return new Result(true,MessageConstant.CHANGE_PASSWORD_SUCCESS);
+    }
 }

@@ -4,6 +4,8 @@ import com.xle.entity.PageResult;
 import com.xle.entity.QueryPageBean;
 import com.xle.pojo.User;
 
+import java.util.Map;
+
 public interface UserService {
     //用户登录
     User login(User user);
@@ -22,4 +24,7 @@ public interface UserService {
 
     //删除用户信息
     void deleteUser(String username);
+
+    //修改密码
+    void changePassword(Map<String, String> map);
 }
