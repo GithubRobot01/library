@@ -26,7 +26,7 @@ public class MessageConstant {
     public static final String UPDATE_USER_FAIL = "更新用户信息失败";
     public static final String DELETE_USER_SUCCESS = "删除用户信息成功";
     public static final String DELETE_USER_FAIL = "删除用户信息失败";
-    public static final String CHANGE_PASSWORD_SUCCESS = "修改密码成功";
+    public static final String CHANGE_PASSWORD_SUCCESS = "密码修改成功,3秒后自动跳转至首页!";
     public static final String CHANGE_PASSWORD_FAIL = "修改密码失败";
 
 }
