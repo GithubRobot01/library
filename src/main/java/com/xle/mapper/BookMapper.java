@@ -2,6 +2,7 @@ package com.xle.mapper;
 
 import com.github.pagehelper.Page;
 import com.xle.pojo.Book;
+import com.xle.pojo.Lend;
 
 public interface BookMapper {
     //根据条件查询图书信息
@@ -18,4 +19,10 @@ public interface BookMapper {
 
     //删除图书信息
     void deleteBook(String isbn);
+
+    //借书减去图书数量
+    void subtract(Lend lend);
+
+    //将归还图书数量加上
+    void addMount(Lend lend);
 }

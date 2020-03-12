@@ -28,7 +28,7 @@
                     <div class="filter-container">
                         <el-input placeholder="书籍编号/书籍名称" v-model="pagination.queryString" style="width: 200px;" class="filter-item"></el-input>
                         <el-button @click="findPage1()" class="dalfBut">查询</el-button>
-                        <el-button type="primary" class="butT" @click="handleCreate()">新增</el-button>
+                        <el-button type="primary" class="butT" @click="handleCreate()">新增图书</el-button>
                     </div>
                     <!--
                     stripe 斑马线
@@ -52,9 +52,9 @@
                         </el-table-column>
                         <el-table-column prop="author" label="作者" width="150" align="center"></el-table-column>
                         <el-table-column prop="publish" label="出版社" width="200" align="center"></el-table-column>
-                        <el-table-column prop="class_name" label="分类" width="85" align="center"></el-table-column>
-                        <el-table-column prop="language_name" label="语言" width="85" align="center"></el-table-column>
-                        <el-table-column label="状态" width="100" align="center">
+                        <el-table-column prop="class_name" label="分类" width="75" align="center"></el-table-column>
+                        <el-table-column prop="language_name" label="语言" width="75" align="center"></el-table-column>
+                        <el-table-column label="状态" width="90" align="center">
                             <template slot-scope="scope">
                                 <span>{{ scope.row.state == '0' ? '已下架' : '上架中'}}</span>
                             </template>
@@ -68,6 +68,7 @@
                         <el-table-column prop="number" label="剩余数量"  width="85" align="center"></el-table-column>
                         <el-table-column label="操作" align="center" fixed="right">
                             <template slot-scope="scope">
+                                <el-button type="text" size="mini" @click="handleBorrow(scope.row)">借阅</el-button>
                                 <el-button type="text" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
                                 <el-button size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
                             </template>
@@ -264,6 +265,50 @@
                             </div>
                         </el-dialog>
                     </div>
+
+                    <!-- 借书标签弹层 -->
+                    <div class="add-form">
+                        <el-dialog title="借出书籍" :visible.sync="dialogFormVisible4Borrow">
+                            <el-form ref="dataAddForm" :model="formData" :rules="rules1" label-position="right" label-width="100px">
+                                <el-row>
+                                    <el-col :span="12">
+                                        <el-form-item label="学号" prop="sid">
+                                            <el-input v-model="formData.sid"/>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form-item label="姓名" prop="stu_name">
+                                            <el-input v-model="formData.stu_name"/>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="12">
+                                        <el-form-item label="ISBN" prop="isbn">
+                                            <el-input v-model="formData.isbn" disabled/>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form-item label="书名" prop="book_name">
+                                            <el-input v-model="formData.book_name" disabled/>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="24">
+                                        <span style="padding: 40px">
+                                            借书数量:<el-input-number v-model="formData.num" controls-position="right" :min="1" :max="maxNum"></el-input-number>
+                                        </span>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                            <div slot="footer" class="dialog-footer">
+                                <el-button @click="dialogFormVisible4Borrow=false">取消</el-button>
+                                <el-button type="primary" @click="addLend()">确定</el-button>
+                            </div>
+                        </el-dialog>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -283,13 +328,19 @@
 					  total:0,//总记录数
 					  queryString:null//查询条件
 				},
+                num:1,
+                maxNum:1,
 				dataList: [],//当前页要展示的分页列表数据
                 formData: {},//表单数据
                 dialogFormVisible: false,//增加表单是否可见
                 dialogFormVisible4Edit:false,//编辑表单是否可见
+                dialogFormVisible4Borrow:false,//借阅表单是否可见
                 rules: {//校验规则
                     isbn: [{ required: true, message: '书籍编号为必填项', trigger: 'blur' }],
                     name: [{ required: true, message: '书名为必填项', trigger: 'blur' }]
+                },
+                rules1: {//校验规则
+                    sid: [{ required: true, message: '学号为必填项', trigger: 'blur' }],
                 },
                 languages:[],
                 classes:[],
@@ -382,6 +433,30 @@
                         }
                     })
                 },
+                //添加借书记录
+                addLend() {
+                    this.$refs['dataAddForm'].validate((vaild)=>{
+                        if (vaild){//校验成功
+                            //表单校验成功,发送ajax请求将表单数据提交到后台
+                            axios.post("/lend/add",this.formData).then((res)=>{
+                                //关闭新增窗口
+                                this.dialogFormVisible4Borrow=false;
+                                if (res.data.flag){
+                                    this.findPage();
+                                    this.$message({
+                                        message:res.data.message,
+                                        type:'success'
+                                    })
+                                }else{
+                                    this.$message.error(res.data.message);
+                                }
+                            })
+                        }else{
+                            this.$message.error("表单校验失败,请检查你输入的信息是否正确!");
+                            return false;
+                        }
+                    })
+                },
                 findPage1(){
                     //解决条件查询数据少时在第二页查询不出数据
                     this.pagination.currentPage=1;
@@ -405,6 +480,20 @@
                 resetForm() {
                     this.formData={};
                 },
+                //弹出添加借阅信息窗口
+                handleBorrow(row){
+                    this.dialogFormVisible4Borrow=true;
+                    this.resetForm();
+                    axios.post("/book/findByIsbn?isbn="+row.isbn).then((res)=>{
+                        if (res.data.flag){
+                            this.formData=res.data.data;
+                            this.maxNum=res.data.data.number;
+                            this.formData.book_name=res.data.data.name;
+                        }else{
+                            this.$message.error(res.data.message);
+                        }
+                    });
+                },
                 // 弹出添加窗口
                 handleCreate() {
                     this.dialogFormVisible=true;
@@ -420,13 +509,6 @@
                             this.$message.error(res.data.message);
                         }
                     });
-                    /*axios.post("/language/findLanguageByIsbn?isbn="+row.isbn).then((res)=>{
-                        if (res.data.flag){
-                            this.formData.language_id=res.data.data.id;
-                        } else{
-                            this.$message.error(res.data.message);
-                        }
-                    })*/
                 },
                 //切换页码
                 handleCurrentChange(currentPage) {

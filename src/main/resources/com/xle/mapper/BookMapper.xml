@@ -57,4 +57,12 @@
         delete from book_info where isbn=#{isbn}
     </delete>
 
+    <update id="subtract" parameterType="com.xle.pojo.Lend">
+      update book_info set number=number-#{num} where isbn=#{isbn}
+    </update>
+
+    <update id="addMount" parameterType="com.xle.pojo.Lend">
+      update book_info set number=number+#{num} where isbn=#{isbn}
+    </update>
+
 </mapper>

@@ -7,7 +7,6 @@ import com.xle.entity.Result;
 import com.xle.pojo.Book;
 import com.xle.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +20,7 @@ public class BookController {
 
     //根据条件分页查询数据信息
     @RequestMapping("/findPage")
-    public PageResult findpage(@RequestBody QueryPageBean queryPageBean){
+    public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
         PageResult pageResult = bookService.findPage(queryPageBean);
         return pageResult;
     }

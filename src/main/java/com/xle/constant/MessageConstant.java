@@ -28,5 +28,10 @@ public class MessageConstant {
     public static final String DELETE_USER_FAIL = "删除用户信息失败";
     public static final String CHANGE_PASSWORD_SUCCESS = "密码修改成功,3秒后自动跳转至首页!";
     public static final String CHANGE_PASSWORD_FAIL = "修改密码失败";
+    public static final String ADD_LEND_SUCCESS = "添加借书记录成功";
+    public static final String ADD_LEND_FAIL = "添加借书记录失败";
+    public static final String BACK_BOOK_SUCCESS = "归还图书成功";
+    public static final String BACK_BOOK_FAIL = "归还图书失败";
+
 
 }

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- 页面meta -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>图书库存管理</title>
+        <meta name="description" content="图书库存管理">
+        <meta name="keywords" content="图书库存管理">
+        <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+        <!-- 引入样式 -->
+        <link rel="stylesheet" href="../plugins/elementui/index.css">
+        <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/style.css">
+    </head>
+    <body class="hold-transition">
+        <div id="app">
+            <div class="content-header">
+                <h1>书籍管理<small>图书借阅记录</small></h1>
+                <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+                    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                    <el-breadcrumb-item>书籍管理</el-breadcrumb-item>
+                    <el-breadcrumb-item>图书借阅记录</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div class="app-container">
+                <div class="box">
+                    <div class="filter-container">
+                        <el-input placeholder="学号/书名" v-model="pagination.queryString" style="width: 200px;" class="filter-item"></el-input>
+                        <el-button @click="findPage1()" class="dalfBut">查询</el-button>
+                    </div>
+                    <!--
+                    stripe 斑马线
+                    highlight-current-row 当前行高亮显示
+                    max-height属性为 Table 指定最大高度。此时若表格所需的高度大于最大高度，则会显示一个滚动条。
+                    -->
+                    <el-table size="small" current-row-key="id" :data="dataList"  max-height="355" stripe highlight-current-row>
+                        <el-table-column type="index" align="center"  label="序号" align="center" fixed></el-table-column>
+                        <el-table-column prop="sid" label="学号"  align="center" ></el-table-column>
+                        <el-table-column prop="stu_name" label="学生姓名"  align="center" ></el-table-column>
+                        <el-table-column prop="isbn" label="ISBN" align="center"></el-table-column>
+                        <el-table-column prop="book_name" label="书籍名称" align="center"></el-table-column>
+                        <el-table-column prop="num" label="数量" align="center"></el-table-column>
+                        <el-table-column prop="lend_date" label="借出日期" align="center"></el-table-column>
+                        <el-table-column prop="due_date" label="应还日期" align="center"></el-table-column>
+                        <el-table-column prop="back_date" label="归还日期" align="center">
+                            <template slot-scope="scope">
+                                <el-tag type="success" v-if="scope.row.back_date!=null">{{scope.row.back_date}}</el-tag>
+                                <el-tag type="warning" v-else-if="currentTime <= (dateStrToIn(scope.row.due_date))">暂未归还</el-tag>
+                                <el-tag type="danger" v-else>预期未归还</el-tag>
+                                <!--<span>{{ (scope.row.back_date !=null) ? scope.row.back_date:((currentTime >= dateStrToIn(scope.row.due_date))?'暂未归还':'预期未归还')}}</span>-->
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" align="center" fixed="right">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.back_date==null"><!--归还日期不为空,可以归还,续借,否则不可以-->
+                                    <el-button type="text" size="mini" @click="handleReturn(scope.row)">归还</el-button>
+                                    <el-button type="text" size="mini" @click="handleRenew(scope.row)">续借</el-button>
+                                </span>
+                                <span v-else>
+                                    <el-button type="text" size="mini" @click="handleReturn(scope.row)" disabled>归还</el-button>
+                                    <el-button type="text" size="mini" @click="handleRenew(scope.row)" disabled>续借</el-button>
+                                </span>
+                                <el-button size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                    <div class="pagination-container">
+                        <el-pagination
+                            class="pagiantion"
+                            @current-change="handleCurrentChange"
+                            :current-page.sync="pagination.currentPage"
+                            :page-size="pagination.pageSize"
+                            layout="total, prev, pager, next, jumper"
+                            :total="pagination.total">
+                        </el-pagination>
+                    </div>
+
+
+
+                    <!-- 编辑标签弹层 -->
+                    <div class="add-form">
+                        <el-dialog title="编辑用户信息" :visible.sync="dialogFormVisible4Edit">
+                            <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right" label-width="100px">
+                                <el-row>
+                                    <el-col :span="12">
+                                        <el-form-item label="学号" prop="sid">
+                                            <el-input v-model="formData.sid" :disabled="true"/>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="12">
+                                        <el-form-item label="姓名" prop="name">
+                                            <el-input v-model="formData.name"/>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form-item label="性别" prop="sex">
+                                            <el-select v-model="formData.sex" filterable placeholder="请选择性别">
+                                                <el-option label="男" value="男"></el-option>
+                                                <el-option label="女" value="女"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="12">
+                                        <el-form-item label="专业" prop="major">
+                                            <el-input v-model="formData.major"/>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form-item label="班级" prop="clazz">
+                                            <el-input v-model="formData.clazz"/>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="12">
+                                        <el-form-item label="用户名">
+                                            <el-input v-model="formData.username" :disabled="true"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form-item label="密码">
+                                            <el-input v-model="formData.password"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                            <div slot="footer" class="dialog-footer">
+                                <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
+                                <el-button type="primary" @click="handleEdit()">确定</el-button>
+                            </div>
+                        </el-dialog>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- 引入组件库 -->
+    <script src="../js/vue.js"></script>
+    <script src="../plugins/elementui/index.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script>
+        var vue = new Vue({
+            el: '#app',
+            data:{
+                pagination: {//分页相关模型数据
+					  currentPage: 1,//当前页码
+					  pageSize:10,//每页显示的记录数
+					  total:0,//总记录数
+					  queryString:null//查询条件
+				},
+                currentTime:'',
+                dueTime:'',
+				dataList: [],//当前页要展示的分页列表数据
+                formData: {},//表单数据
+                dialogFormVisible: false,//增加表单是否可见
+                dialogFormVisible4Edit:false,//编辑表单是否可见
+                rules: {//校验规则
+                    sid: [{ required: true, message: '学号为必填项', trigger: 'blur' }],
+                    isbn: [{ required: true, message: '书籍ISBN为必填项', trigger: 'blur' }],
+                },
+                languages:[],
+                classes:[],
+                //控制书架号输入框状态
+                disabledInput:false
+            },
+            //钩子函数，VUE对象初始化完成后自动执行
+            created() {
+                //vue对象初始化完成后调用分页查询方法,完成分页查询
+                this.findPage();
+            },
+            methods: {
+                dateStrToIn(str) {
+                    const _str = str.replace(/-/g,'/');
+                    const _date = new Date(_str);
+                    return _date.getTime();
+                },
+                //编辑之后点击确定按钮
+                handleEdit() {
+                    this.$refs['dataEditForm'].validate((vaild)=>{
+                        if (vaild){
+                            //校验成功
+                            axios.post("/user/update",this.formData).then((res)=>{
+                                if (res.data.flag){
+                                    //更新数据成功
+                                    this.$message({
+                                        message:res.data.message,
+                                        type:'success'
+                                    });
+                                }else{
+                                    this.$message.error(res.data.message);
+                                }
+                            }).finally(()=>{
+                                this.findPage();
+                                this.dialogFormVisible4Edit=false;
+                            })
+                        }else{
+                            this.$message.error("表单校验失败,请检查你输入的信息是否正确!");
+                            return false;
+                        }
+                    })
+                },
+                //借书
+                handleBorrow () {
+                    this.$refs['dataAddForm'].validate((vaild)=>{
+                        if (vaild){//校验成功
+                            //表单校验成功,发送ajax请求将表单数据提交到后台
+                            axios.post("/lend/add",this.formData).then((res)=>{
+                                //关闭新增窗口
+                                this.dialogFormVisible=false;
+                                if (res.data.flag){
+                                    this.findPage();
+                                    this.$message({
+                                        message:res.data.message,
+                                        type:'success'
+                                    })
+                                }else{
+                                    this.$message.error(res.data.message);
+                                }
+                            })
+                        }else{
+                            this.$message.error("表单校验失败,请检查你输入的信息是否正确!");
+                            return false;
+                        }
+                    })
+                },
+                findPage1(){
+                    //解决条件查询数据少时在第二页查询不出数据
+                    this.pagination.currentPage=1;
+                    this.findPage();
+                },
+                //分页查询
+                findPage() {
+                    var param={
+                        currentPage: this.pagination.currentPage,
+                        pageSize: this.pagination.pageSize,
+                        queryString: this.pagination.queryString
+
+                    };
+                    axios.post("/lend/findPage",param).then((res)=>{
+                        //计算出当前时间毫秒值(减去一天的毫秒值,因为最后一天不算超过期限)
+                        this.currentTime=new Date().getTime()-86400000;
+                        //this.dueTime=this.dateStrToIn(res.data.rows[0].due_date);
+                        //解析Controller响应回的数据,为模型数据赋值
+                        this.pagination.total=res.data.total;
+                        this.dataList=res.data.rows;
+                    })
+                },
+                // 重置表单
+                resetForm() {
+                    this.formData={};
+                },
+                // 弹出添加窗口
+                handleCreate() {
+                    this.dialogFormVisible=true;
+                    this.resetForm();
+                },
+                // 弹出编辑窗口
+                handleUpdate(row) {
+                    this.dialogFormVisible4Edit=true;
+                    axios.post("/user/findByUsername?username="+row.username).then((res)=>{
+                        if (res.data.flag){
+                            this.formData=res.data.data;
+                        }else{
+                            this.$message.error(res.data.message);
+                        }
+                    });
+                },
+                //切换页码
+                handleCurrentChange(currentPage) {
+                    this.pagination.currentPage=currentPage;
+                    this.findPage();
+                },
+
+                // 删除
+                handleDelete(row) {//row是一个json对象
+                    this.$confirm("您确定要删除当前数据吗?","提示",{
+                        type: 'warning'
+                    }).then(()=>{
+                        axios.post("/user/delete?username="+row.username).then((res)=>{
+                            if (res.data.flag){
+                                this.$message({
+                                    message:res.data.message,
+                                    type:'success'
+                                });
+                                //重新进行分页查询
+                                this.findPage();
+                            }else{
+                                this.$message.error(res.data.message);
+                            }
+                        }).catch((r)=>{
+                            this.showMessage(r);
+                        });
+                    }).catch(()=>{
+                        this.$message({
+                            message:"删除已取消!",
+                            type:'info'
+                        })
+                    });
+                },
+                handleReturn(row) {//row是一个json对象
+                    this.$confirm("您确定要归还吗?","提示",{
+                        type: 'info'
+                    }).then(()=>{
+                        axios.post("/lend/back",row).then((res)=>{
+                            if (res.data.flag){
+                                this.$message({
+                                    message:res.data.message,
+                                    type:'success'
+                                });
+                                //重新进行分页查询
+                                this.findPage();
+                            }else{
+                                this.$message.error(res.data.message);
+                            }
+                        }).catch((r)=>{
+                            this.showMessage(r);
+                        });
+                    }).catch(()=>{
+                        this.$message({
+                            message:"删除已取消!",
+                            type:'info'
+                        })
+                    });
+                },
+            }
+        })
+    </script>
+</html>

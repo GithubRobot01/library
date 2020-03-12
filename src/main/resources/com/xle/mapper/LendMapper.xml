@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xle.mapper.LendMapper">
+
+    <select id="selectByCondition" parameterType="String" resultType="com.xle.pojo.Lend">
+        SELECT * from lend_list
+        <if test="value != null and value.length > 0">
+            where (sid like '%${value}%' or book_name like '%${value}%')
+        </if>
+    </select>
+
+    <insert id="add" parameterType="com.xle.pojo.Lend">
+        insert into lend_list values
+        (#{sid},#{stu_name},#{isbn},#{book_name},#{num},#{lend_date},#{due_date},null)
+    </insert>
+
+    <update id="backBook" parameterType="com.xle.pojo.Lend">
+        update lend_list set back_date=#{back_date} where isbn=#{isbn}
+    </update>
+
+</mapper>

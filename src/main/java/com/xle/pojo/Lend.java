@@ -1,53 +1,28 @@
 package com.xle.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
+@Data
 public class Lend implements Serializable {
 
-    private long ser_num;
-    private long book_id;
-    private long reader_id;
-    private Date lend_date;
-    private Date back_date;
+    private String sid; //学号
+    private String stu_name; //学生姓名
+    private String isbn; //ISBN
+    private String book_name; //书名
+    private int num; //借出数量
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private Date lend_date; //借出时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private Date due_date; //应还时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    private Date back_date; //还书时间
 
-    public long getReaderId() {
-        return reader_id;
-    }
-
-    public void setReaderId(long reader_id) {
-        this.reader_id = reader_id;
-    }
-
-    public long getBookId() {
-        return book_id;
-    }
-
-    public void setBookId(long book_id) {
-        this.book_id = book_id;
-    }
-
-    public void setSer_num(long ser_num) {
-        this.ser_num = ser_num;
-    }
-
-    public Date getBackDate() {
-        return back_date;
-    }
-
-    public void setBackDate(Date back_date) {
-        this.back_date = back_date;
-    }
-
-    public Date getLendDate() {
-        return lend_date;
-    }
-
-    public void setLendDate(Date lend_date) {
-        this.lend_date = lend_date;
-    }
-
-    public long getSer_num() {
-        return ser_num;
-    }
 }
