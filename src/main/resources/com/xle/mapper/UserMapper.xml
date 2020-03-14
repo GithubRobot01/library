@@ -56,4 +56,8 @@
         update user set password=#{password} where username=#{username}
     </update>
 
+    <select id="borrowInfo" parameterType="String" resultType="com.xle.pojo.Lend">
+        SELECT * from lend_list WHERE sid=#{sid}
+    </select>
+
 </mapper>

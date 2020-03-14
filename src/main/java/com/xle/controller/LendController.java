@@ -64,4 +64,24 @@ public class LendController {
         return new Result(true,MessageConstant.BACK_BOOK_SUCCESS);
     }
 
+    //续借图书
+    @RequestMapping("/renew")
+    public Result renewBook(@RequestBody Lend lend){
+        //取出应还时间
+        java.util.Date due_date = lend.getDue_date();
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(due_date);
+        //向后推30天
+        calendar.add(Calendar.DATE,30);
+        Date due_Date=new Date(calendar.getTimeInMillis());
+        lend.setDue_date(due_Date);
+        try {
+            lendService.renewBook(lend);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.RENEW_BOOK_FAIL);
+        }
+        return new Result(true,MessageConstant.RENEW_BOOK_SUCCESS);
+    }
+
 }

@@ -10,6 +10,7 @@ import java.util.Date;
 @Data
 public class Lend implements Serializable {
 
+    private int id; //主键
     private String sid; //学号
     private String stu_name; //学生姓名
     private String isbn; //ISBN

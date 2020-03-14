@@ -3,6 +3,9 @@ package com.xle.mapper;
 import com.github.pagehelper.Page;
 import com.xle.pojo.Book;
 import com.xle.pojo.Lend;
+import com.xle.pojo.PopularBook;
+
+import java.util.List;
 
 public interface BookMapper {
     //根据条件查询图书信息
@@ -25,4 +28,13 @@ public interface BookMapper {
 
     //将归还图书数量加上
     void addMount(Lend lend);
+
+    //查询某日期前图书数量
+    Integer findBookCountBeroreDate(String date);
+
+    //查询本周热门图书信息
+    List<PopularBook> popularBookByWeek();
+
+    //查询本月热门图书信息
+    List<PopularBook> popularBookByMonth();
 }

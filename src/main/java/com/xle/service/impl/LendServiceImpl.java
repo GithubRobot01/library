@@ -49,4 +49,9 @@ public class LendServiceImpl implements LendService {
         lendMapper.backBook(lend);
     }
 
+    @Override
+    public void renewBook(Lend lend) {
+        lendMapper.renewBook(lend);
+    }
+
 }

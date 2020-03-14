@@ -32,6 +32,15 @@ public class MessageConstant {
     public static final String ADD_LEND_FAIL = "添加借书记录失败";
     public static final String BACK_BOOK_SUCCESS = "归还图书成功";
     public static final String BACK_BOOK_FAIL = "归还图书失败";
-
+    public static final String RENEW_BOOK_SUCCESS = "续借图书成功";
+    public static final String RENEW_BOOK_FAIL = "续借图书失败";
+    public static final String GET_BOOK_NUMBER_REPORT_SUCCESS = "获取图书数量报表成功";
+    public static final String GET_BOOK_NUMBER_REPORT_FAIL = "获取图书数量报表失败";
+    public static final String GET_POPULAR_BOOK_OF_WEEK_SUCCESS = "获取本周热门图书成功";
+    public static final String GET_POPULAR_BOOK_OF_WEEK_FAIL = "获取本周热门图书失败";
+    public static final String GET_POPULAR_BOOK_OF_MONTH_SUCCESS = "获取本月热门图书成功";
+    public static final String GET_POPULAR_BOOK_OF_MONTH_FAIL = "获取本月热门图书失败";
+    public static final String QUERY_STUDENT_INFO_SUCCESS = "查询用户个人信息成功";
+    public static final String QUERY_STUDENT_INFO_FAIL = "查询用户个人信息失败";
 
 }

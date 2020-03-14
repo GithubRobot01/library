@@ -27,4 +27,7 @@ public interface UserService {
 
     //修改密码
     void changePassword(Map<String, String> map);
+
+    //根据条件分页查询个人借阅信息
+    PageResult borrowInfo(QueryPageBean queryPageBean, String sid);
 }

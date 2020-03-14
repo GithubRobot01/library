@@ -17,4 +17,7 @@ public interface LendService {
 
     //归还图书
     void backBook(Lend lend);
+
+    //续借图书
+    void renewBook(Lend lend);
 }

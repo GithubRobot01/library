@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Date;
+import java.util.Calendar;
+
 @RestController
 @RequestMapping("/book")
 public class BookController {
@@ -28,6 +31,10 @@ public class BookController {
     //添加图书信息
     @RequestMapping("/add")
     public Result addBook(@RequestBody Book book){
+        Calendar c=Calendar.getInstance();
+        //获取当天日期
+        Date storage_date=new Date(c.getTimeInMillis());
+        book.setStorage_date(storage_date);
         try {
             bookService.addBook(book);
         }catch (Exception e){

@@ -12,11 +12,15 @@
 
     <insert id="add" parameterType="com.xle.pojo.Lend">
         insert into lend_list values
-        (#{sid},#{stu_name},#{isbn},#{book_name},#{num},#{lend_date},#{due_date},null)
+        (null,#{sid},#{stu_name},#{isbn},#{book_name},#{num},#{lend_date},#{due_date},null)
     </insert>
 
     <update id="backBook" parameterType="com.xle.pojo.Lend">
-        update lend_list set back_date=#{back_date} where isbn=#{isbn}
+        update lend_list set back_date=#{back_date} where id=#{id}
+    </update>
+
+    <update id="renewBook" parameterType="com.xle.pojo.Lend">
+        update lend_list set due_date=#{due_date} where id=#{id}
     </update>
 
 </mapper>

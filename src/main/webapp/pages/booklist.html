@@ -16,10 +16,10 @@
     <body class="hold-transition">
         <div id="app">
             <div class="content-header">
-                <h1>书籍管理<small>书籍列表</small></h1>
+                <h1>书籍信息<small>书籍列表</small></h1>
                 <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
                     <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                    <el-breadcrumb-item>书籍管理</el-breadcrumb-item>
+                    <el-breadcrumb-item>书籍信息</el-breadcrumb-item>
                     <el-breadcrumb-item>书籍列表</el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
@@ -37,29 +37,30 @@
                     -->
                     <el-table size="small" current-row-key="id" :data="dataList"  max-height="355" stripe highlight-current-row>
                         <el-table-column type="index" align="center" width="60" label="序号" align="center" fixed></el-table-column>
-                        <el-table-column prop="isbn" label="书号" width="150" align="center" ></el-table-column>
+                        <el-table-column prop="isbn" label="ISBN" width="120" align="center" ></el-table-column>
 
-                        <el-table-column label="书名" width="180" align="center">
+                        <el-table-column label="书名" width="150" align="center">
                             <template slot-scope="scope">
                                 <el-popover trigger="hover" placement="top">
                                     <p style="font-weight: bold">书名:《{{ scope.row.name }}》</p>
-                                    <p style="font-weight: bold;width: 500px;color: black">{{ scope.row.introduction }}</p>
+                                    <p style="font-weight: bold;width: 500px">{{ scope.row.introduction }}</p>
                                     <div slot="reference" class="name-wrapper">
                                         <el-tag size="medium">{{ scope.row.name }}</el-tag>
                                     </div>
                                 </el-popover>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="author" label="作者" width="150" align="center"></el-table-column>
-                        <el-table-column prop="publish" label="出版社" width="200" align="center"></el-table-column>
-                        <el-table-column prop="class_name" label="分类" width="75" align="center"></el-table-column>
-                        <el-table-column prop="language_name" label="语言" width="75" align="center"></el-table-column>
-                        <el-table-column label="状态" width="90" align="center">
+                        <el-table-column prop="author" label="作者" width="120" align="center"></el-table-column>
+                        <el-table-column prop="publish" label="出版社" width="160" align="center"></el-table-column>
+                        <el-table-column prop="class_name" label="分类" width="70" align="center"></el-table-column>
+                        <el-table-column prop="language_name" label="语言" width="70" align="center"></el-table-column>
+                        <el-table-column prop="storage_date" label="入库时间" width="135" align="center"></el-table-column>
+                        <el-table-column label="状态" width="80" align="center">
                             <template slot-scope="scope">
                                 <span>{{ scope.row.state == '0' ? '已下架' : '上架中'}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="书架号" width="65" align="center">
+                        <el-table-column label="书架号" width="60" align="center">
                             <template slot-scope="scope">
                                 <span>{{ (scope.row.state == '0'||scope.row.pressmark==null) ? '无' : scope.row.pressmark}}</span>
                             </template>
@@ -267,6 +268,47 @@
                     </div>
 
                     <!-- 借书标签弹层 -->
+                    <div class="add-form">
+                        <el-dialog title="借出书籍" :visible.sync="dialogFormVisible4Borrow">
+                            <el-form ref="dataAddForm" :model="formData" :rules="rules1" label-position="right" label-width="100px">
+                                <el-row>
+                                    <el-col :span="12">
+                                        <el-form-item label="学号" prop="sid">
+                                            <el-input v-model="formData.sid"/>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form-item label="姓名" prop="stu_name">
+                                            <el-input v-model="formData.stu_name"/>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="12">
+                                        <el-form-item label="ISBN" prop="isbn">
+                                            <el-input v-model="formData.isbn" disabled/>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form-item label="书名" prop="book_name">
+                                            <el-input v-model="formData.book_name" disabled/>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                                <el-row>
+                                    <el-col :span="24">
+                                        <span style="padding: 40px">
+                                            借书数量:<el-input-number v-model="formData.num" controls-position="right" :min="1" :max="maxNum"></el-input-number>
+                                        </span>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                            <div slot="footer" class="dialog-footer">
+                                <el-button @click="dialogFormVisible4Borrow=false">取消</el-button>
+                                <el-button type="primary" @click="addLend()">确定</el-button>
+                            </div>
+                        </el-dialog>
+                    </div><!-- 借书标签弹层 -->
                     <div class="add-form">
                         <el-dialog title="借出书籍" :visible.sync="dialogFormVisible4Borrow">
                             <el-form ref="dataAddForm" :model="formData" :rules="rules1" label-position="right" label-width="100px">

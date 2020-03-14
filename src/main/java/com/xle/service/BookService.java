@@ -4,6 +4,9 @@ import com.xle.entity.PageResult;
 import com.xle.entity.QueryPageBean;
 import com.xle.pojo.Book;
 
+import java.util.List;
+import java.util.Map;
+
 public interface BookService {
     /**
      * 根据条件分页查找书籍信息
@@ -23,4 +26,13 @@ public interface BookService {
 
     //删除图书信息
     void deleteBook(String isbn);
+
+    //根据月份查询图书数量
+    List<Integer> findBookCountByMonths(List<String> months);
+
+    //获取本周热门图书信息
+    Map<String, Object> popularBookByWeek();
+
+    //获取本月热门图书信息
+    Map<String, Object> popularBookByMonth();
 }

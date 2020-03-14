@@ -12,7 +12,7 @@
 
     <insert id="addBook" parameterType="com.xle.pojo.Book">
         insert into book_info values
-        (#{isbn},#{name},#{author},#{publish},#{introduction},#{language_name},#{class_name},#{pressmark},#{state},#{number})
+        (#{isbn},#{name},#{author},#{publish},#{introduction},#{language_name},#{class_name},#{pressmark},#{state},#{number},#{storage_date})
     </insert>
 
     <select id="findByIsbn" parameterType="String" resultType="com.xle.pojo.Book">
@@ -64,5 +64,17 @@
     <update id="addMount" parameterType="com.xle.pojo.Lend">
       update book_info set number=number+#{num} where isbn=#{isbn}
     </update>
+
+    <select id="findBookCountBeroreDate" parameterType="String" resultType="int">
+        select count(isbn) from book_info where storage_date &lt;=#{value}
+    </select>
+
+    <select id="popularBookByWeek" resultType="com.xle.pojo.PopularBook">
+        SELECT sum(num) as count,book_name as name FROM lend_list WHERE YEARWEEK(DATE_FORMAT(lend_date,'%Y-%m-%d')) = YEARWEEK(NOW()) GROUP BY name ORDER BY count DESC limit 0,5
+    </select>
+
+    <select id="popularBookByMonth" resultType="com.xle.pojo.PopularBook">
+        SELECT sum(num) as count,book_name as name FROM lend_list WHERE DATE_FORMAT(lend_date,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m') GROUP BY name ORDER BY count DESC limit 0,5
+    </select>
 
 </mapper>

@@ -10,6 +10,7 @@ import com.xle.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -56,5 +57,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassword(Map<String, String> map) {
         userMapper.changePassword(map);
+    }
+
+    @Override
+    public PageResult borrowInfo(QueryPageBean queryPageBean, String sid) {
+        Integer currentPage = queryPageBean.getCurrentPage();
+        Integer pageSize = queryPageBean.getPageSize();
+
+        PageHelper.startPage(currentPage,pageSize);
+        Page<User> page = userMapper.borrowInfo(sid);
+        return new PageResult(page.getTotal(),page.getResult());
     }
 }

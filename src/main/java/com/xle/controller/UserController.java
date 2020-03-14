@@ -4,7 +4,9 @@ import com.xle.constant.MessageConstant;
 import com.xle.entity.PageResult;
 import com.xle.entity.QueryPageBean;
 import com.xle.entity.Result;
+import com.xle.pojo.Lend;
 import com.xle.pojo.User;
+import com.xle.service.LendService;
 import com.xle.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
@@ -21,6 +23,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    LendService lendService;
     User loginUser;
 
     //用户登录
@@ -32,7 +36,7 @@ public class UserController {
             return "redirect:/pages/main.html";
         }else if (loginUser!=null&&"1".equals(loginUser.getType())){
             //学生登录
-            return "redirect:/pages/main.html";
+            return "redirect:/pages/main_stu.html";
         }
         return "redirect:/login.html";
     }
@@ -123,5 +127,51 @@ public class UserController {
             return new Result(false,MessageConstant.CHANGE_PASSWORD_FAIL);
         }
         return new Result(true,MessageConstant.CHANGE_PASSWORD_SUCCESS);
+    }
+
+
+    //查询用户个人信息
+    @RequestMapping("/studentInfo")
+    @ResponseBody
+    public Result studentInfo(){
+        List<User> user=new ArrayList<>();
+        user.add(loginUser);
+        if (loginUser!=null){
+            return new Result(true,MessageConstant.QUERY_STUDENT_INFO_SUCCESS,user);
+        }
+        return new Result(false,MessageConstant.QUERY_STUDENT_INFO_FAIL);
+    }
+
+
+    //根据条件分页查询个人借阅信息
+    @RequestMapping("/borrowInfo")
+    @ResponseBody
+    public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
+        PageResult pageResult = userService.borrowInfo(queryPageBean,loginUser.getSid());
+        return pageResult;
+    }
+
+    //添加借阅记录
+    @RequestMapping("/borrowBook")
+    @ResponseBody
+    public Result add(@RequestBody Lend lend){
+        Calendar c=Calendar.getInstance();
+        //获取当天日期
+        java.sql.Date lend_Date=new java.sql.Date(c.getTimeInMillis());
+        lend.setLend_date(lend_Date);
+        //当天日期向后推30天就是应还书日期
+        c.add(Calendar.DATE,30);
+        java.sql.Date due_Date=new Date(c.getTimeInMillis());
+        lend.setDue_date(due_Date);
+
+        lend.setSid(loginUser.getSid());
+        lend.setStu_name(loginUser.getName());
+        try {
+            lendService.add(lend);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.ADD_LEND_FAIL);
+        }
+        return new Result(true,MessageConstant.ADD_LEND_SUCCESS);
     }
 }
