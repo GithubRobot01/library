@@ -120,7 +120,7 @@
                                             <!--点击下拉框时查询语言信息
                                             filterable 下拉框可搜索
                                             -->
-                                            <el-select v-model="formData.language_name" filterable placeholder="请选择语言" v-on:focus="selectLan">
+                                            <el-select v-model="formData.language_name" filterable placeholder="请选择语言">
                                                 <el-option
                                                         v-for="item in languages"
                                                         :key="item.id"
@@ -132,7 +132,7 @@
                                     </el-col>
                                     <el-col :span="12">
                                         <el-form-item label="类型">
-                                            <el-select v-model="formData.class_name" filterable placeholder="请选择书籍类型" v-on:focus="selectCla">
+                                            <el-select v-model="formData.class_name" filterable placeholder="请选择书籍类型">
                                                 <el-option
                                                         v-for="item in classes"
                                                         :key="item.id"
@@ -209,7 +209,7 @@
                                 <el-row>
                                     <el-col :span="12">
                                         <el-form-item label="语言">
-                                            <el-select v-model="formData.language_name" filterable placeholder="请选择语言" v-on:focus="selectLan">
+                                            <el-select v-model="formData.language_id" filterable placeholder="请选择语言">
                                                 <el-option
                                                         v-for="item in languages"
                                                         :key="item.id"
@@ -221,7 +221,7 @@
                                     </el-col>
                                     <el-col :span="12">
                                         <el-form-item label="类型">
-                                            <el-select v-model="formData.class_name" filterable placeholder="请选择书籍类型" v-on:focus="selectCla">
+                                            <el-select v-model="formData.class_id" filterable placeholder="请选择书籍类型">
                                                 <el-option
                                                         v-for="item in classes"
                                                         :key="item.id"
@@ -394,6 +394,9 @@
                 //vue对象初始化完成后调用分页查询方法,完成分页查询
                 this.findPage();
             },
+            mounted(){
+                this.getOption();
+            },
             methods: {
                 inputToDisabled(region){
                     //如果选择的是1那么禁用输入框,否则该输入框是可以输入的
@@ -404,8 +407,7 @@
                         this.disabledInput=false;
                     }
                 },
-                //查询所有书籍语言
-                selectLan(){
+                getOption(){
                     axios.post("/language/findAll").then((res)=>{
                         //解析Controller响应回的数据,为模型数据赋值
                         if (res.data.flag){
@@ -413,10 +415,7 @@
                         } else{
                             this.$message.error(res.data.message);
                         }
-                    })
-                },
-                //查询所有书籍类型
-                selectCla(){
+                    });
                     axios.post("/class/findAll").then((res)=>{
                         //解析Controller响应回的数据,为模型数据赋值
                         if (res.data.flag){

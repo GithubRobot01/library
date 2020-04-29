@@ -34,11 +34,11 @@
             <if test="introduction != null">
                 introduction = #{introduction},
             </if>
-            <if test="language_name != null">
-                language_id = #{language_name},
+            <if test="language_id != null">
+                language_id = #{language_id},
             </if>
-            <if test="class_name != null">
-                class_id = #{class_name},
+            <if test="class_id != null">
+                class_id = #{class_id},
             </if>
             <if test="pressmark != null">
                 pressmark = #{pressmark},
